@@ -1,0 +1,10 @@
+type: service-source@1.0.0
+name: MR Tests
+version: 0.0.1
+data:
+  platforms:
+    linux/amd64: {}
+  $transformer:
+    baseSlug: mr-testing
+  fragment:
+    type: service@1.0.0
