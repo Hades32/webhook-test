@@ -1,0 +1,45 @@
+type: service-source@1.0.0
+name: Transformer template
+version: 1.0.1
+data:
+  platforms:
+    linux/amd64: {}
+  $transformer:
+    baseSlug: template-amd64
+  fragment:
+    type: transformer@1.0.0
+    data:
+      targetPlatform: linux/amd64
+      backflowMapping:
+        - upstreamPath:
+            $$formula: CONCATENATE("data.platforms['", this.downstream.data.platform,
+              "'].image")
+          downstreamValue:
+            $$formula: 'CONCATENATE(this.downstream.slug, ":", this.downstream.version)'
+      inputFilter:
+        type: object
+        required:
+          - type
+          - data
+        properties:
+          type:
+            const: service-source@1.0.0
+          version:
+            pattern: ^[^+]*- # only run on draft versions
+          data:
+            type: object
+            required:
+              - platforms
+            properties:
+              platforms:
+                type: object
+                required:
+                  - linux/amd64
+      requirements: {}
+      workerFilter:
+        type: object
+        required:
+          - type
+        properties:
+          type:
+            const: transformer-worker@1.0.0
